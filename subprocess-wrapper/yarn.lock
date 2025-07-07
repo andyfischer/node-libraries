@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@andyfischer/parse-stdout-lines@0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@andyfischer/parse-stdout-lines/-/parse-stdout-lines-0.1.0.tgz#9a24715d9ca0950bd2d62cb1e0af07c962de751e"
-  integrity sha512-5y3H3Hst4DoLXn5W+hNuSOyz3BrN/bgRcXuJAeJJei47Kh2busmwLegjUbwA3pINZFBAz3QalnYi+t0pGiuXOg==
+"@andyfischer/parse-stdout-lines@0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@andyfischer/parse-stdout-lines/-/parse-stdout-lines-0.1.1.tgz#c763c4adc5e2821e5219696edda61c6ce6f0eabd"
+  integrity sha512-4oUwCnnF5NaL72XBTH72Kn6dju1ncWBhQPjAkYjbNLu09QX0HXJu9kDelFEfLKSROf2PJiBsqHrPIrx2Z0FALQ==
 
 "@andyfischer/streams@0.2.0":
   version "0.2.0"
