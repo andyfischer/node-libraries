@@ -1,11 +1,12 @@
 {
   "name": "@andyfischer/parse-stdout-lines",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "license": "MIT",
   "scripts": {
     "build": "tsc -p .",
     "tsc": "tsc",
-    "test": "vitest"
+    "test": "vitest",
+    "prepare": "tsc -p ."
   },
   "files": [
     "src",
