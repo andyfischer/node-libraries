@@ -1,0 +1,25 @@
+{
+  "name": "@andyfischer/subprocess-wrapper",
+  "version": "0.1.0",
+  "license": "MIT",
+  "scripts": {
+    "test": "vitest",
+    "fix": "prettier \"**/*.{ts,tsx}\" --write",
+    "dev": "tsc-watch --onSuccess \"node ./dist/cli/startCli.js\"",
+    "build": "tsc -p ."
+  },
+  "files": [
+    "src",
+    "dist",
+    "tsconfig.json",
+    "README.md"
+  ],
+  "dependencies": {
+    "@andyfischer/parse-stdout-lines": "0.1.0",
+    "@andyfischer/streams": "0.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "22.13.0",
+    "typescript": "5.7.3"
+  }
+}
