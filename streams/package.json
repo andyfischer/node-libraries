@@ -1,6 +1,6 @@
 {
   "name": "@andyfischer/streams",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "license": "MIT",
   "sideEffects": false,
   "description": "Streams utility class",
@@ -14,10 +14,11 @@
   "files": [
     "src",
     "dist",
-    "README.md"
+    "README.md",
+    "tsconfig.json"
   ],
   "devDependencies": {
-    "@types/node": "^14.0.0",
+    "@types/node": "^20.0.0",
     "typescript": "^5.2.0",
     "vitest": "1.6.0"
   },
