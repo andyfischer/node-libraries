@@ -1,6 +1,7 @@
 {
   "name": "@andyfischer/sqlite-wrapper",
-  "version": "0.1.1",
+  "version": "0.1.2",
+  "main": "dist/index.js",
   "license": "MIT",
   "scripts": {
     "test": "vitest",
@@ -12,17 +13,17 @@
   "files": [
     "src",
     "dist",
-    "README.md",
-    "tsconfig.json"
+    "tsconfig.json",
+    "README.md"
   ],
   "dependencies": {
-    "@andyfischer/generic-lexer": "0.1.0",
-    "@andyfischer/streams": "0.2.0",
-    "better-sqlite3": "11.8.1"
+    "better-sqlite3": "11.8.1",
+    "vitest": "^3.0.6",
+    "@andyfischer/generic-lexer": "0.1.1",
+    "@andyfischer/streams": "0.2.0"
   },
   "devDependencies": {
     "@types/node": "22.13.0",
-    "typescript": "5.7.3",
-    "vitest": "^3.0.6"
+    "typescript": "5.7.3"
   }
 }
