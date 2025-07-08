@@ -22,15 +22,16 @@ export interface RunResult {
 export class SqliteDatabase {
     db: DatabaseImpl;
     logs?: Stream;
-    constructor(db: DatabaseImpl, logs: Stream) {
+    onRunStatement?: (sql: string, params: Array<any>) => void;
+    constructor(db: DatabaseImpl) {
         this.db = db;
-        this.logs = logs;
     }
     // Return first matching item
     get(sql: string, params?: any): any {
         try {
-            const statement = this.db.prepare(sql);
             params = paramsToArray(params);
+            this.onRunStatement?.(sql, params);
+            const statement = this.db.prepare(sql);
             return statement.get.apply(statement, params);
         }
         catch (e) {
@@ -43,8 +44,9 @@ export class SqliteDatabase {
     // Return a list of items
     list(sql: string, params?: any): any[] {
         try {
-            const statement = this.db.prepare(sql);
             params = paramsToArray(params);
+            this.onRunStatement?.(sql, params);
+            const statement = this.db.prepare(sql);
             return statement.all.apply(statement, params);
         }
         catch (e) {
@@ -61,8 +63,9 @@ export class SqliteDatabase {
         if (typeof sql !== 'string')
             throw new Error("first arg (sql) should be a string");
         try {
-            const statement = this.db.prepare(sql);
             params = paramsToArray(params);
+            this.onRunStatement?.(sql, params);
+            const statement = this.db.prepare(sql);
             yield* statement.iterate.apply(statement, params);
         }
         catch (e) {
@@ -72,8 +75,9 @@ export class SqliteDatabase {
     }
     run(sql: string, params?: any): RunResult {
         try {
-            const statement = this.db.prepare(sql);
             params = paramsToArray(params);
+            this.onRunStatement?.(sql, params);
+            const statement = this.db.prepare(sql);
             return statement.run.apply(statement, params);
         }
         catch (e) {
@@ -85,6 +89,7 @@ export class SqliteDatabase {
     }
     pragma(statement: string) {
         try {
+            this.onRunStatement?.(statement, []);
             return this.db.pragma(statement, { simple: true });
         }
         catch (e) {
@@ -113,12 +118,12 @@ export class SqliteDatabase {
         const { sql, values } = prepareInsertStatement(tableName, row);
         return this.run(sql, values);
     }
-    update(tableName: string, where: string, whereValues: any[], object: any) {
-        const { sql, values } = prepareUpdateStatement(tableName, where, whereValues, object);
+    update(tableName: string, whereClause: string, whereValues: any[], row: Record<string, any>) {
+        const { sql, values } = prepareUpdateStatement(tableName, whereClause, whereValues, row);
         return this.run(sql, values);
     }
-    upsert(tableName: string, where: Record<string, any>, row: Record<string, any>) {
-        return runUpsert(this, tableName, where, row);
+    upsert(tableName: string, whereClause: Record<string, any>, row: Record<string, any>) {
+        return runUpsert(this, tableName, whereClause, row);
     }
     singleton(tableName: string) {
         return new SingletonAccessor(this, tableName);

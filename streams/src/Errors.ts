@@ -48,6 +48,7 @@ export function captureError(error: Error | ErrorDetails | string, related?: Rec
         return {
             errorMessage: 'Unknown error',
             errorType: 'unknown_error',
+            errorId: newErrorId(),
             related,
         };
     }
@@ -112,4 +113,33 @@ export function recordUnhandledError(error: Error | ErrorDetails) {
 }
 export function startGlobalErrorListener() {
     return getGlobalErrorListeners().newListener();
+}
+function recursiveFormatErrors({ error, indent, alreadyPrintedMessage }: {
+    error: ErrorDetails;
+    indent: string;
+    alreadyPrintedMessage?: boolean;
+}): string[] {
+    let lines = [];
+    if (error.errorMessage && !alreadyPrintedMessage) {
+        lines.push(indent + `"${error.errorMessage}"`);
+        indent = indent + '  ';
+    }
+    if (error.errorId)
+        lines.push(indent + `errorId: ${error.errorId}`);
+    if (error.errorType)
+        lines.push(indent + `errorType: ${error.errorType}`);
+    for (const related of error.related || []) {
+        lines.push(indent + JSON.stringify(related));
+    }
+    if (error.stack) {
+        lines.push(indent + 'Stack trace:');
+        const stackLines = error.stack.split('\n');
+        for (const stackLine of stackLines)
+            lines.push(indent + '  ' + stackLine);
+    }
+    if (error.cause) {
+        lines.push(indent + `Caused by:`);
+        lines = lines.concat(recursiveFormatErrors({ error: error.cause, indent: indent + '  ', alreadyPrintedMessage: false }));
+    }
+    return lines;
 }

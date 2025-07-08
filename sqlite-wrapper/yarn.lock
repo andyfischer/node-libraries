@@ -2,15 +2,15 @@
 # yarn lockfile v1
 
 
-"@andyfischer/generic-lexer@0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@andyfischer/generic-lexer/-/generic-lexer-0.1.0.tgz#f48950bab2432eb3c476743f1f0105ca51476bb6"
-  integrity sha512-Akg5X7gISpVSN63qX08HFDU+KERFV2EeVs6VxT1UlJxRo9I5UWv5Z9fFEpAk2kz5U+Dt4ei0sOt2z0U5xjfsgw==
+"@andyfischer/generic-lexer@0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@andyfischer/generic-lexer/-/generic-lexer-0.1.1.tgz#ce56119de38d5c22970aa2ae4299d5019f82a239"
+  integrity sha512-s1rRnLpPthqjvqzJoAM4KvscNSutNMpCAMT1i3EhZTdQ9nHCSWvrnHpthqOSXAqf0MNjAn6GBcXF6cP5S9iWsg==
 
-"@andyfischer/streams@0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@andyfischer/streams/-/streams-0.2.0.tgz#1d459c5d0d81ea0019673a4e84149453591b0f60"
-  integrity sha512-FVltY1cb1sk1WVZx1TKEFBvdNtMfvZHsWpOjXHyPaV4VYoL0ohRcvZUQQ6gmgRay2Xvw7hFl7OCA98M0AaT+sA==
+"@andyfischer/streams@0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@andyfischer/streams/-/streams-0.3.0.tgz#4a0951178159d687f56825a46d5d8b85d70d3080"
+  integrity sha512-19LccD24FjFvyhNt00LxdKWBswXwnWs1IyyaJsQVjy3K+kJJ17CsXwP/anNjUKNy5J5a5SLmxhlS/Hi7LbEPXg==
 
 "@esbuild/aix-ppc64@0.25.6":
   version "0.25.6"

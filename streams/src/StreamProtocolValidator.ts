@@ -1,6 +1,6 @@
 import { Stream, } from './Stream';
-import { StreamEvent, c_done, c_item, c_fail, c_schema, c_restart, c_delta, c_log_info, c_log_warn, c_log_error } from './EventType';
-const KnownEventTypes = new Set([c_done, c_item, c_fail, c_schema, c_restart, c_delta, c_log_info, c_log_warn, c_log_error]);
+import { StreamEvent, c_done, c_item, c_fail, c_log_info, c_log_warn, c_log_error } from './EventType';
+const KnownEventTypes = new Set([c_done, c_item, c_fail, c_log_info, c_log_warn, c_log_error]);
 export class StreamProtocolValidator {
     description: string;
     hasSentDone: boolean = false;
@@ -18,15 +18,8 @@ export class StreamProtocolValidator {
             throw new Error(error);
         }
         // After the stream is closed, no more messages are allowed.
-        // After 'done', only certain messages are allowed (close, start_updates, fail)
         if (this.hasSentDone || this.hasSentFail) {
             const error = `Stream validation failed for (${this.description}), got message after the stream is closed: ${JSON.stringify(msg)}`;
-            console.error(error);
-            throw new Error(error);
-        }
-        // Can't send 'schema' after an 'item'
-        if (msg.t === c_schema && this.hasSeenFirstItem) {
-            const error = `Stream validation failed for (${this.description}), got 'schema' after 'item': ${JSON.stringify(msg)}`;
             console.error(error);
             throw new Error(error);
         }

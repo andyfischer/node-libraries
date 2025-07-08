@@ -1,10 +1,9 @@
 import { toException, ErrorDetails } from './Errors';
 import { captureError, } from './Errors';
 import { StreamSuperTrace, StreamSuperDuperTrace } from './Config';
-import type { SchemaDecl } from './SchemaDecl';
 import { callbackBasedIterator } from './callbackBasedIterator';
 import { BackpressureStop, exceptionIsBackpressureStop } from './BackpressureStop';
-import { StreamEvent, c_item, c_done, c_fail, c_schema, c_restart, c_log_info, c_log_warn, c_log_error } from './EventType';
+import { StreamEvent, c_item, c_done, c_fail, c_log_info, c_log_warn, c_log_error, c_hint, c_hint_list, c_hint_single_item } from './EventType';
 import { eventTypeToString, formatStreamEvent } from './formatStreamEvent';
 const TraceCloseEvents = false;
 export interface EventReceiver<ItemType = any> {
@@ -102,8 +101,6 @@ export class Stream<ItemType = any> implements EventReceiver {
             error = captureError(error);
         this.event({ t: c_fail, error });
     }
-    restart() { this.event({ t: c_restart }); }
-    schema(schema: SchemaDecl) { this.event({ t: c_schema, schema }); }
     info(message: string, details?: Record<string, any>) {
         this.event({ t: c_log_info, message, details });
     }
@@ -112,6 +109,12 @@ export class Stream<ItemType = any> implements EventReceiver {
     }
     logError(error: ErrorDetails) {
         this.event({ t: c_log_error, error });
+    }
+    hintList() {
+        this.event({ t: c_hint, result: c_hint_list });
+    }
+    hintSingleItem() {
+        this.event({ t: c_hint, result: c_hint_single_item });
     }
     closeWithError(error: ErrorDetails) {
         if (this.isClosed())

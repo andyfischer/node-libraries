@@ -22,7 +22,12 @@ export interface InsertItem {
     columns: string[];
     values: string[];
 }
-export type SqlStatement = CreateTable | CreateIndex | InsertItem;
+export interface PragmaStatement {
+    t: 'pragma';
+    pragma_name: string;
+    value?: string;
+}
+export type SqlStatement = CreateTable | CreateIndex | InsertItem | PragmaStatement;
 function createTable(it: TokenIterator): SqlStatement {
     it.consume(); // create
     it.consume(); // table
@@ -132,7 +137,7 @@ function insertItem(it: TokenIterator): SqlStatement {
         columns.push(it.consumeAsText());
         it.tryConsume(t_comma);
     }
-    if (it.consumeAsText() !== 'values')
+    if (it.consumeAsText().toLowerCase() !== 'values')
         throw new Error("expected keyword: values, saw: " + it.nextText(-1));
     const values = [];
     it.consume(t_lparen);
@@ -146,6 +151,43 @@ function insertItem(it: TokenIterator): SqlStatement {
         table_name,
         columns,
         values,
+    };
+}
+function pragmaStatement(it: TokenIterator): SqlStatement {
+    it.consume(); // pragma
+    const pragma_name = it.consumeAsText();
+    let value;
+    if (!it.finished() && !it.nextIs(t_semicolon)) {
+        if (it.nextText() === '=') {
+            it.consume(); // =
+            value = it.consumeAsText();
+        }
+        else {
+            // Handle function call syntax like table_info(users) or simple values
+            const tokens = [];
+            let parenDepth = 0;
+            while (!it.finished() && !it.nextIs(t_semicolon)) {
+                if (it.nextIs(t_lparen)) {
+                    parenDepth++;
+                }
+                if (it.nextIs(t_rparen)) {
+                    parenDepth--;
+                }
+                tokens.push(it.consumeAsText());
+                if (parenDepth === 0) {
+                    break;
+                }
+            }
+            if (tokens.length > 0) {
+                value = tokens.join('');
+            }
+        }
+    }
+    it.tryConsume(t_semicolon);
+    return {
+        t: 'pragma',
+        pragma_name,
+        value,
     };
 }
 function tokenizeSql(sql: string) {
@@ -168,6 +210,10 @@ export function parseSql(sql: string) {
     }
     if (it.nextText(0).toLowerCase() === 'insert' && it.nextText(1).toLowerCase() === 'into') {
         const statement = insertItem(it);
+        return statement;
+    }
+    if (it.nextText(0).toLowerCase() === 'pragma') {
+        const statement = pragmaStatement(it);
         return statement;
     }
     throw new Error(`unrecognized statement ${it.nextText(0)} ${it.nextText(1)}`);

@@ -1,6 +1,6 @@
 {
   "name": "@andyfischer/streams",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "license": "MIT",
   "sideEffects": false,
   "description": "Streams utility class",
@@ -17,6 +17,10 @@
     "README.md",
     "tsconfig.json"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/andyfischer/node-libraries"
+  },
   "devDependencies": {
     "@types/node": "^20.0.0",
     "typescript": "^5.2.0",

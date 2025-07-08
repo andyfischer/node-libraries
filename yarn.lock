@@ -2,6 +2,16 @@
 # yarn lockfile v1
 
 
+"@andyfischer/sqlite-helper@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@andyfischer/sqlite-helper/-/sqlite-helper-0.1.1.tgz#e8b012cec3d95fe16005b4fa85ae8034f8dc82b7"
+  integrity sha512-WUA3WZHh9n5ffgsIZRUu7pN4s+Fc+UQczTqC+ea4YR2c2m//LDAYPtTSx8QZPiHIZKlz2cDg9R3D0TJjTo/19A==
+  dependencies:
+    "@andyfischer/query" "^0.1.1"
+    "@andyfischer/streams" "^0.1.1"
+    better-sqlite3 "11.8.1"
+    vitest "^3.0.6"
+
 "@andyfischer/streams@^0.1.1":
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/@andyfischer/streams/-/streams-0.1.1.tgz#063720bf59ac4e851d6a920ffcc2cb6e2dcff5b7"

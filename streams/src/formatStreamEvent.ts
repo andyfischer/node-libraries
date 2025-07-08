@@ -1,4 +1,4 @@
-import { c_delta, c_done, c_fail, c_item, c_log_error, c_log_info, c_log_warn, c_restart, c_schema, EventType, StreamEvent } from "./EventType";
+import { c_done, c_fail, c_item, c_log_error, c_log_info, c_log_warn, EventType, StreamEvent } from "./EventType";
 export function eventTypeToString(type: EventType) {
     switch (type) {
         case c_item: return 'item';
@@ -7,9 +7,6 @@ export function eventTypeToString(type: EventType) {
         case c_log_info: return 'log_info';
         case c_log_warn: return 'log_warn';
         case c_log_error: return 'log_error';
-        case c_schema: return 'schema';
-        case c_restart: return 'restart';
-        case c_delta: return 'delta';
         default: return `unknown(${type})`;
     }
 }

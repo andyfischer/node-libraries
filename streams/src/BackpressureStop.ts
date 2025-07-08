@@ -5,5 +5,5 @@ export class BackpressureStop extends Error {
     }
 }
 export function exceptionIsBackpressureStop(e: Error) {
-    return e['is_backpressure_stop'];
+    return e && e['is_backpressure_stop'];
 }

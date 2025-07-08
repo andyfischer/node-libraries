@@ -28,7 +28,7 @@ export function dynamicOutputToStream(output: any, stream: Stream) {
         return;
     }
     if (Array.isArray(output)) {
-        stream.schema({ hint: 'list' });
+        stream.hintList();
         for (const el of output)
             stream.item(el);
         stream.done();
@@ -36,14 +36,14 @@ export function dynamicOutputToStream(output: any, stream: Stream) {
     }
     const isObject = typeof output === 'object';
     if (isObject && output[Symbol.iterator] !== undefined) {
-        stream.schema({ hint: 'list' });
+        stream.hintList();
         for (const el of output)
             stream.item(el);
         stream.done();
         return;
     }
     if (isObject && output[Symbol.asyncIterator] !== undefined) {
-        stream.schema({ hint: 'list' });
+        stream.hintList();
         (async () => {
             for await (const el of output)
                 stream.item(el);
@@ -64,7 +64,7 @@ export function dynamicOutputToStream(output: any, stream: Stream) {
         });
         return;
     }
-    stream.schema({ hint: 'value' });
+    stream.hintSingleItem();
     stream.item(output);
     stream.done();
 }

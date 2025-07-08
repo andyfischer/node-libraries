@@ -1,5 +1,5 @@
 import { EventReceiver, Stream } from './Stream';
-import { StreamEvent, c_done, c_fail, c_item, c_log_error, c_log_info, c_log_warn, c_restart, } from './EventType';
+import { StreamEvent, c_done, c_fail, c_item, c_log_error, c_log_info, c_log_warn, } from './EventType';
 import { ErrorDetails, recordUnhandledError } from './Errors';
 import { BackpressureStop, exceptionIsBackpressureStop } from './BackpressureStop';
 /*
@@ -41,9 +41,6 @@ export class StreamDispatcher<ItemType = any, MetadataType = any> implements Eve
     }
     logError(error: ErrorDetails) {
         this.event({ t: c_log_error, error });
-    }
-    restart() {
-        this.event({ t: c_restart });
     }
     close() {
         if (this.closed)

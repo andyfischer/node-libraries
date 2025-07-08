@@ -108,7 +108,11 @@ export async function runDatabaseSloppynessCheck(db: SqliteDatabase, schema: Dat
 export function runMigrationForCreateStatement(db: SqliteDatabase, createStatement: string, options: MigrationOptions) {
     const statement = parseSql(createStatement);
     // console.log(statement)
-    if (statement.t == 'create_table') {
+    if (statement.t === 'pragma') {
+        // Ignore PRAGMA statements in migrations
+        return;
+    }
+    else if (statement.t == 'create_table') {
         const existingTable: any = db.get(`select sql from sqlite_schema where name = ?`, statement.name);
         if (!existingTable) {
             // Table doesn't exist yet, create it.
