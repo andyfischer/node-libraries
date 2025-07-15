@@ -30,8 +30,12 @@ export class SqliteDatabase {
     logs: Stream
     onRunStatement?: (sql: string, params: Array<any>) => void
 
-    constructor(db: DatabaseImpl) {
+    constructor(db: DatabaseImpl, logs: Stream) {
+        if (!db) throw new Error("db is required");
+        if (!logs) throw new Error("logs is required");
+
         this.db = db;
+        this.logs = logs;
     }
 
     // Return first matching item

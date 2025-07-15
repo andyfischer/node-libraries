@@ -23,9 +23,9 @@ export class DatabaseLoader {
         if (!this.db) {
             this.db = new SqliteDatabase(
                 new Database(this.options.filename),
+                this.options.logs,
             );
 
-            this.db.logs = this.options.logs;
             this.db.migrateToSchema(this.options.schema);
             this.db.runDatabaseSloppynessCheck(this.options.schema);
 

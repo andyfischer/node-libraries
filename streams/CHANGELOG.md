@@ -1,4 +1,9 @@
 
+# 0.3.1
+
+ - Fix code formatting.
+ - Add 'return this' to Stream.logToConsole()
+
 # 0.3.0
 
 Removing a lot of code that isn't an essential part of this project.

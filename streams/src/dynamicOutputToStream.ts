@@ -1,6 +1,7 @@
 import { exceptionIsBackpressureStop } from "./BackpressureStop";
 import { recordUnhandledError } from "./Errors";
 import { Stream } from "./Stream";
+
 /*
  Take a function's output, check the runtime type, and convert it to
  Stream events using these rules:
@@ -17,16 +18,19 @@ export function dynamicOutputToStream(output: any, stream: Stream) {
         stream.done();
         return;
     }
+
     if (output.t === 'stream') {
         output.pipe(stream);
         return;
     }
+
     if (output.t === 'table') {
         for (const item of output.each())
             stream.item(item);
         stream.done();
         return;
     }
+
     if (Array.isArray(output)) {
         stream.hintList();
         for (const el of output)
@@ -34,7 +38,9 @@ export function dynamicOutputToStream(output: any, stream: Stream) {
         stream.done();
         return;
     }
+
     const isObject = typeof output === 'object';
+
     if (isObject && output[Symbol.iterator] !== undefined) {
         stream.hintList();
         for (const el of output)
@@ -42,6 +48,7 @@ export function dynamicOutputToStream(output: any, stream: Stream) {
         stream.done();
         return;
     }
+
     if (isObject && output[Symbol.asyncIterator] !== undefined) {
         stream.hintList();
         (async () => {
@@ -51,23 +58,28 @@ export function dynamicOutputToStream(output: any, stream: Stream) {
         })();
         return;
     }
+
     if (output.then) {
         output.then(resolved => {
             dynamicOutputToStream(resolved, stream);
         })
-            .catch(e => {
+        .catch(e => {
             if (stream.closedByUpstream) {
                 recordUnhandledError(e);
                 return;
             }
+
             stream.fail(e);
         });
+
         return;
     }
+
     stream.hintSingleItem();
     stream.item(output);
     stream.done();
 }
+
 /*
   Call the callback function and send its output to the stream, using
   the conversion rules in dynamicOutputToStream.
@@ -79,16 +91,19 @@ export function callbackToStream(callback: Function, stream: Stream) {
     try {
         const output = callback();
         dynamicOutputToStream(output, stream);
-    }
-    catch (e) {
+
+    } catch (e) {
+
         if (stream.closedByUpstream) {
             recordUnhandledError(e);
             return;
         }
+
         if (exceptionIsBackpressureStop(e)) {
             // Function was deliberately killed by a BackpressureStop exception.
             return;
         }
+
         stream.fail(e);
         return;
     }

@@ -2,12 +2,12 @@
 # yarn lockfile v1
 
 
-"@andyfischer/generic-lexer@^0.1.1":
+"@andyfischer/generic-lexer@0.1.1":
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/@andyfischer/generic-lexer/-/generic-lexer-0.1.1.tgz#ce56119de38d5c22970aa2ae4299d5019f82a239"
   integrity sha512-s1rRnLpPthqjvqzJoAM4KvscNSutNMpCAMT1i3EhZTdQ9nHCSWvrnHpthqOSXAqf0MNjAn6GBcXF6cP5S9iWsg==
 
-"@andyfischer/streams@^0.3.0":
+"@andyfischer/streams@0.3.0":
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/@andyfischer/streams/-/streams-0.3.0.tgz#4a0951178159d687f56825a46d5d8b85d70d3080"
   integrity sha512-19LccD24FjFvyhNt00LxdKWBswXwnWs1IyyaJsQVjy3K+kJJ17CsXwP/anNjUKNy5J5a5SLmxhlS/Hi7LbEPXg==

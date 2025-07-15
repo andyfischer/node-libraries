@@ -2,13 +2,14 @@ import { describe, it, expect, beforeEach } from 'vitest'
 import { runMigrationForCreateStatement, MigrationOptions } from '../migration'
 import { SqliteDatabase } from '../SqliteDatabase'
 import Database from 'better-sqlite3'
+import { Stream } from '@andyfischer/streams'
 
 describe('runMigrationForCreateStatement', () => {
     let db: SqliteDatabase
 
     beforeEach(() => {
         const sqliteDb = new Database(':memory:')
-        db = new SqliteDatabase(sqliteDb);
+        db = new SqliteDatabase(sqliteDb, Stream.newNullStream());
     })
 
     describe('PRAGMA statement handling', () => {

@@ -19,8 +19,8 @@
   "dependencies": {
     "better-sqlite3": "11.8.1",
     "vitest": "^3.0.6",
-    "@andyfischer/generic-lexer": "^0.1.1",
-    "@andyfischer/streams": "^0.3.0"
+    "@andyfischer/generic-lexer": "0.1.1",
+    "@andyfischer/streams": "0.3.0"
   },
   "devDependencies": {
     "@types/node": "22.13.0",
