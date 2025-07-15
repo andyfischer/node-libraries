@@ -1,5 +1,5 @@
 export interface DatabaseSchema {
-    name: string;
-    statements: string[];
-    initialData?: string[];
+    name: string
+    statements: string[]
+    initialData?: string[]
 }
