@@ -111,16 +111,21 @@ function createTable(it: TokenIterator): SqlStatement {
         let parenDepth = 0;
 
         while (!it.finished()) {
-            // Each token as part of the definition
-            if (it.nextIs(t_lparen))
-                parenDepth--;
-            if (it.nextIs(t_rparen))
-                parenDepth++;
+            // Check if we're at the end of the table definition
+            if (it.nextIs(t_rparen) && parenDepth === 0)
+                break;
+            
+            // Check if we're at the end of this column definition (comma at depth 0)
+            if (it.nextIs(t_comma) && parenDepth === 0) {
+                it.consume(t_comma);
+                break;
+            }
 
-            if (it.tryConsume(t_comma))
-                break;
-            if (parenDepth >= 1)
-                break;
+            // Update parentheses depth
+            if (it.nextIs(t_lparen))
+                parenDepth++;
+            if (it.nextIs(t_rparen))
+                parenDepth--;
 
             tokens.push(it.consumeAsText());
         }

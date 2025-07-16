@@ -1,4 +1,8 @@
 
+# 0.3.1
+
+ - Fix bugs in the SQL parsing logic for some expressions.
+
 # 0.3.0
 
  - The `.logs` field in SetupOptions is now required.
