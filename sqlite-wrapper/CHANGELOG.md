@@ -1,4 +1,8 @@
 
+# 0.3.2
+
+ - Add SlowQueryWarning
+
 # 0.3.1
 
  - Fix bugs in the SQL parsing logic for some expressions.

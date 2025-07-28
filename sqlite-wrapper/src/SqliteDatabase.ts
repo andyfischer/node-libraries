@@ -1,5 +1,5 @@
 
-import DatabaseImpl from 'better-sqlite3'
+import { Database as BetterSqliteDatabase } from 'better-sqlite3'
 import { parseSql } from './parser'
 import { runDatabaseSloppynessCheck, MigrationOptions, runMigrationForCreateStatement } from './migration'
 import { DatabaseSchema } from './DatabaseSchema'
@@ -9,6 +9,7 @@ import { prepareInsertStatement, prepareUpdateStatement } from './sqlStatementBu
 import { runUpsert } from './sqlOperations'
 import { SingletonAccessor } from './SingletonAccessor'
 import { IncrementingIdOptions, SingletonIncrementingId } from './SingletonIncrementingId'
+import { SlowQueryWarning } from './SlowQueryWarning'
 
 function paramsToArray(params) {
     if (params === undefined)
@@ -26,11 +27,11 @@ export interface RunResult {
 }
 
 export class SqliteDatabase {
-    db: DatabaseImpl
+    db: BetterSqliteDatabase
     logs: Stream
     onRunStatement?: (sql: string, params: Array<any>) => void
 
-    constructor(db: DatabaseImpl, logs: Stream) {
+    constructor(db: BetterSqliteDatabase, logs: Stream) {
         if (!db) throw new Error("db is required");
         if (!logs) throw new Error("logs is required");
 
@@ -40,12 +41,16 @@ export class SqliteDatabase {
 
     // Return first matching item
     get(sql: string, params?: any): any {
+        const timer = new SlowQueryWarning(sql, (msg) => this.logs.warn(msg));
         try {
             params = paramsToArray(params);
             this.onRunStatement?.(sql, params);
             const statement = this.db.prepare(sql);
-            return statement.get.apply(statement, params);
+            const result = statement.get.apply(statement, params);
+            timer.finish();
+            return result;
         } catch (e) {
+            timer.finish();
             const error = captureError(e, [{ sql }]);
             e.errorMessage = `Error trying to get() with SQL: ${e.message}`;
             this.error(captureError(error));
@@ -55,12 +60,16 @@ export class SqliteDatabase {
 
     // Return a list of items
     list(sql: string, params?: any): any[] {
+        const timer = new SlowQueryWarning(sql, (msg) => this.logs.warn(msg));
         try {
             params = paramsToArray(params);
             this.onRunStatement?.(sql, params);
             const statement = this.db.prepare(sql);
-            return statement.all.apply(statement, params);
+            const result = statement.all.apply(statement, params);
+            timer.finish();
+            return result;
         } catch (e) {
+            timer.finish();
             const error = captureError(e, [{ sql }]);
             e.errorMessage = `Error trying to list() with SQL: ${e.message}`;
             this.error(captureError(error));
@@ -76,24 +85,31 @@ export class SqliteDatabase {
         if (typeof sql !== 'string')
             throw new Error("first arg (sql) should be a string");
 
+        const timer = new SlowQueryWarning(sql, (msg) => this.logs.warn(msg));
         try {
             params = paramsToArray(params);
             this.onRunStatement?.(sql, params);
             const statement = this.db.prepare(sql);
             yield* statement.iterate.apply(statement, params);
+            timer.finish();
         } catch (e) {
+            timer.finish();
             this.error(captureError(e));
             throw e;
         }
     }
 
     run(sql: string, params?: any): RunResult {
+        const timer = new SlowQueryWarning(sql, (msg) => this.logs.warn(msg));
         try {
             params = paramsToArray(params);
             this.onRunStatement?.(sql, params);
             const statement = this.db.prepare(sql);
-            return statement.run.apply(statement, params);
+            const result = statement.run.apply(statement, params);
+            timer.finish();
+            return result;
         } catch (e) {
+            timer.finish();
             const error = captureError(e, [{ sql }]);
             e.errorMessage = `Error trying to run() SQL: ${e.message}`;
             this.error(captureError(error));
@@ -102,10 +118,14 @@ export class SqliteDatabase {
     }
 
     pragma(statement: string) {
+        const timer = new SlowQueryWarning(statement, (msg) => this.logs.warn(msg));
         try {
             this.onRunStatement?.(statement, []);
-            return this.db.pragma(statement, { simple: true });
+            const result = this.db.pragma(statement, { simple: true });
+            timer.finish();
+            return result;
         } catch (e) {
+            timer.finish();
             this.error(captureError(e));
             throw e;
         }
@@ -205,6 +225,6 @@ export class SqliteDatabase {
     }
 
     close() {
-        return this.db.close();
+        this.db.close();
     }
 }
