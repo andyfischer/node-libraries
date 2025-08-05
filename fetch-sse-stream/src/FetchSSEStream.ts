@@ -80,6 +80,8 @@ export class FetchSSEStream<ResponseType> {
 
             while (true) {
                 const { done, value } = await reader.read();
+
+                console.log(`FetchSSEStream: got chunk`, { done, value });
                 
                 if (done) {
                     if (this.stream && !this.stream.isClosed()) {
