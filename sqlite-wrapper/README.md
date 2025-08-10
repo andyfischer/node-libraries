@@ -62,6 +62,35 @@ Will load the SQLite database as soon as you call `DatabaseLoader.get()`
 When the table is first loaded, the library will automatically do non-destructive
 migration to the latest schema.
 
+##### Migration Options
+
+The `DatabaseLoader` constructor accepts an optional `migration` object in `SetupOptions` to control migration behavior:
+
+```javascript
+let _db = new DatabaseLoader({
+    filename: './something.sqlite',
+    schema: { /* ... */ },
+    migration: {
+        safeMigrate: true,           // Default: true
+        dropLeftoverTables: false,   // Default: false  
+        doDestructiveRebuilds: false // Default: false
+    }
+});
+```
+
+**Migration Options:**
+
+- `safeMigrate` (boolean, default: true) - Enables the standard migration behavior using `migrateToSchema()`. When disabled, no automatic migrations are performed.
+
+- `dropLeftoverTables` (boolean, default: false) - When enabled, automatically drops any tables or indexes found in the database that are not defined in the current schema. This helps clean up old database objects after schema changes.
+
+- `doDestructiveRebuilds` (boolean, default: false) - When enabled, automatically performs destructive migrations and table rebuilds when schema differences require them. This includes operations like:
+  - Dropping columns that no longer exist in the schema
+  - Changing column definitions that require rebuilding the table
+  - Other schema changes that cannot be done with simple ALTER TABLE statements
+
+**Warning:** Use `dropLeftoverTables` and `doDestructiveRebuilds` with caution as they can result in data loss. Always backup your database before enabling these options.
+
 ##### DatabaseLoader.get()
 
 Returns a SqliteDatabase instead.

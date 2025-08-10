@@ -1,6 +1,6 @@
 {
   "name": "@andyfischer/streams",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "license": "MIT",
   "sideEffects": false,
   "description": "Streams utility class",
@@ -8,7 +8,8 @@
   "scripts": {
     "build": "tsc -p .",
     "tsc": "tsc",
-    "test": "vitest",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "prepare": "yarn build"
   },
   "files": [

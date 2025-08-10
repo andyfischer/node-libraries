@@ -18,6 +18,12 @@ export type EventReceiverCallback<ItemType = any> = (event: StreamEvent<ItemType
 
 export type LooseEventReceiver<ItemType = any> = EventReceiver<ItemType> | EventReceiverCallback<ItemType>
 
+export interface CallbacksListener<ItemType = any>  {
+    item?(item: ItemType): void
+    done?(): void
+    fail?(error: ErrorDetails): void
+}
+
 export class Stream<ItemType = any> implements EventReceiver {
     t = 'stream'
     id?: number
@@ -174,6 +180,27 @@ export class Stream<ItemType = any> implements EventReceiver {
                 this._sendToReceiver(event);
             }
         }
+    }
+
+    listen(listener: CallbacksListener) {
+        this.pipe({
+            event: (evt: StreamEvent) => {
+                switch (evt.t) {
+                case c_item:
+                    if (listener.item)
+                        listener.item(evt.item);
+                    break;
+                case c_done:
+                    if (listener.done)
+                        listener.done();
+                    break;
+                case c_fail:
+                    if (listener.fail)
+                        listener.fail(evt.error);
+                    break;
+                }
+            }
+        });
     }
 
     // Event consuming callbacks //

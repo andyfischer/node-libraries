@@ -1,4 +1,8 @@
 
+# 0.3.2
+
+ - Add Stream.listen()
+
 # 0.3.1
 
  - Fix code formatting.

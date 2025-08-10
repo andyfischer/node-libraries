@@ -427,3 +427,162 @@ it('throws ProtocolError on events after close', () => {
     expect(() => stream.item('test')).toThrow(ProtocolError);
 });
 
+it('listen calls item callback for item events', () => {
+    const stream = new Stream();
+    const itemCallback = vi.fn();
+    
+    stream.listen({ item: itemCallback });
+    
+    stream.item('test1');
+    stream.item('test2');
+    stream.done();
+    
+    expect(itemCallback).toHaveBeenCalledWith('test1');
+    expect(itemCallback).toHaveBeenCalledWith('test2');
+    expect(itemCallback).toHaveBeenCalledTimes(2);
+});
+
+it('listen calls done callback for done event', () => {
+    const stream = new Stream();
+    const doneCallback = vi.fn();
+    
+    stream.listen({ done: doneCallback });
+    
+    stream.item('test');
+    stream.done();
+    
+    expect(doneCallback).toHaveBeenCalledTimes(1);
+    expect(doneCallback).toHaveBeenCalledWith();
+});
+
+it('listen calls fail callback for fail event', () => {
+    const stream = new Stream();
+    const failCallback = vi.fn();
+    const error = { errorMessage: 'test error' };
+    
+    stream.listen({ fail: failCallback });
+    
+    stream.item('test');
+    stream.fail(error);
+    
+    expect(failCallback).toHaveBeenCalledWith(error);
+    expect(failCallback).toHaveBeenCalledTimes(1);
+});
+
+it('listen works with all callback types', () => {
+    const stream = new Stream();
+    const itemCallback = vi.fn();
+    const doneCallback = vi.fn();
+    const failCallback = vi.fn();
+    
+    stream.listen({
+        item: itemCallback,
+        done: doneCallback,
+        fail: failCallback
+    });
+    
+    stream.item('test1');
+    stream.item('test2');
+    stream.done();
+    
+    expect(itemCallback).toHaveBeenCalledWith('test1');
+    expect(itemCallback).toHaveBeenCalledWith('test2');
+    expect(doneCallback).toHaveBeenCalledTimes(1);
+    expect(failCallback).not.toHaveBeenCalled();
+});
+
+it('listen works with partial callback objects', () => {
+    const stream = new Stream();
+    const itemCallback = vi.fn();
+    
+    stream.listen({ item: itemCallback });
+    
+    stream.item('test');
+    stream.done();
+    
+    expect(itemCallback).toHaveBeenCalledWith('test');
+});
+
+it('listen handles empty callback object', () => {
+    const stream = new Stream();
+    
+    expect(() => {
+        stream.listen({});
+        stream.item('test');
+        stream.done();
+    }).not.toThrow();
+});
+
+it('listen ignores non-item/done/fail events', () => {
+    const stream = new Stream();
+    const itemCallback = vi.fn();
+    const doneCallback = vi.fn();
+    const failCallback = vi.fn();
+    
+    stream.listen({
+        item: itemCallback,
+        done: doneCallback,
+        fail: failCallback
+    });
+    
+    stream.info('info message');
+    stream.warn('warn message');
+    stream.item('test');
+    stream.done();
+    
+    expect(itemCallback).toHaveBeenCalledWith('test');
+    expect(itemCallback).toHaveBeenCalledTimes(1);
+    expect(doneCallback).toHaveBeenCalledTimes(1);
+    expect(failCallback).not.toHaveBeenCalled();
+});
+
+it('listen works with stream that has backlog', () => {
+    const stream = new Stream();
+    const itemCallback = vi.fn();
+    const doneCallback = vi.fn();
+    
+    stream.item('backlog1');
+    stream.item('backlog2');
+    stream.done();
+    
+    stream.listen({
+        item: itemCallback,
+        done: doneCallback
+    });
+    
+    expect(itemCallback).toHaveBeenCalledWith('backlog1');
+    expect(itemCallback).toHaveBeenCalledWith('backlog2');
+    expect(doneCallback).toHaveBeenCalledTimes(1);
+});
+
+it('listen with async callbacks', async () => {
+    const stream = new Stream();
+    const items: string[] = [];
+    let completed = false;
+    
+    stream.listen({
+        item: (item: string) => items.push(item),
+        done: () => { completed = true; }
+    });
+    
+    setTimeout(() => {
+        stream.item('async1');
+        stream.item('async2');
+        stream.done();
+    }, 10);
+    
+    await new Promise(resolve => {
+        const check = () => {
+            if (completed) {
+                resolve(null);
+            } else {
+                setTimeout(check, 5);
+            }
+        };
+        check();
+    });
+    
+    expect(items).toEqual(['async1', 'async2']);
+    expect(completed).toBe(true);
+});
+
