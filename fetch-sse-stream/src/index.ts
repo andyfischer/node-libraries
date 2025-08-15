@@ -1,1 +1,2 @@
-export { FetchSSEStream, fetchStream, FetchSSEOptions } from './FetchSSEStream';
+export { SseRequest, fetchSseStream, type SseFetchOptions } from './SseRequest.js';
+export { SseStreamParser } from './SseStreamParser.js';

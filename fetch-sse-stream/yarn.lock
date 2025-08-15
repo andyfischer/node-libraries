@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@andyfischer/streams@^0.3.1":
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/@andyfischer/streams/-/streams-0.3.1.tgz#fb771178526ace8568186ad03b0e60bcfd2bbe83"
-  integrity sha512-CVn6zwWONx/GfolulZu2AZMwfzA5IqQY2irorD8wWdgaBInW/Y3MIWUw+4MahjNMHXwIDgW5LJx9pZmNGf/4og==
+"@andyfischer/streams@^0.3.2":
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/@andyfischer/streams/-/streams-0.3.2.tgz#dda2bfe38e298d034d7b5165fc773590411a76b2"
+  integrity sha512-1I6X9IcqBL6MdpLU5IPqS7rVzoBh+dQJvjfb/YQvZKz3bmpf2C5v7bWL3hoJewWoOD3p4Np5bqat2h8AdOBKPg==
 
 "@esbuild/aix-ppc64@0.21.5":
   version "0.21.5"

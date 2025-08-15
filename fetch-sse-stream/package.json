@@ -1,6 +1,6 @@
 {
   "name": "@andyfischer/fetch-sse-stream",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "license": "MIT",
   "description": "HTTP client using fetch with Server-Sent Events parsing, using @andyfischer/streams",
   "main": "dist/index.js",
@@ -19,7 +19,7 @@
     "tsconfig.json"
   ],
   "dependencies": {
-    "@andyfischer/streams": "^0.3.1"
+    "@andyfischer/streams": "^0.3.2"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
