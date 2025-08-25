@@ -241,6 +241,7 @@ describe('Integration Tests', () => {
 
       const items: any[] = [];
       const errors: any[] = [];
+      let isDone = false;
 
       const stream = fetchSseStream({
         url: 'https://api.example.com/stream',
@@ -249,14 +250,15 @@ describe('Integration Tests', () => {
 
       stream.listen({
         item: (item) => items.push(item),
-        fail: (error) => errors.push(error)
+        fail: (error) => errors.push(error),
+        done: () => { isDone = true; }
       });
 
       await new Promise(resolve => setTimeout(resolve, 100));
 
       expect(items).toHaveLength(1);
-      expect(errors).toHaveLength(1);
-      expect(errors[0].errorMessage).toBe('Connection closed');
+      expect(errors).toHaveLength(0);
+      expect(isDone).toBe(true);
     });
 
     it('should handle custom headers and options', async () => {

@@ -69,7 +69,9 @@ export class SseRequest<ResponseType> {
         }
         
         if (done) {
-          this.stream.done();
+          if (!this.stream.isClosed()) {
+            this.stream.done();
+          }
           break;
         }
 
@@ -85,9 +87,22 @@ export class SseRequest<ResponseType> {
         return;
       }
 
+      const errorMessage = (error as Error).message;
+      if (errorMessage === 'terminated' || errorMessage.includes('Connection closed')) {
+        if (!this.stream.isClosed()) {
+          this.stream.done();
+        }
+        return;
+      }
+
       if (!this.stream.isClosed()) {
         this.stream.fail(error as Error);
+        return;
       }
+    }
+    
+    if (!this.stream.isClosed()) {
+      this.stream.done();
     }
   }
 
