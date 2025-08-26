@@ -2,7 +2,6 @@
 import { Stream, c_item, c_done, c_fail, } from '@andyfischer/streams'
 import Fs from 'fs'
 
-
 export interface CsvFormatOptions {
     fields: string[] | Record<string, string>
     seperator?: '\t' | ','
